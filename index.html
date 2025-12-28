@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Label Paket EBTAQ | Grid 2x2</title>
+    <title>Label Paket EBTAQ | v3.2 Final Header</title>
     <style>
         /* Ukuran Kertas F4 (215mm x 330mm) */
         @page { size: 215mm 330mm; margin: 0; }
@@ -17,89 +17,100 @@
         .control-panel {
             background: #fff; width: 210mm; margin: 20px auto;
             padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-align: center;
         }
-        .row { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
-        .group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-        label { font-size: 11px; font-weight: bold; color: #555; }
-        input, select { height: 38px; padding: 0 10px; border: 1px solid #ccc; border-radius: 4px; }
-        .btn-gen { background: #28a745; color: white; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        .row { display: flex; gap: 15px; margin-bottom: 15px; justify-content: center; align-items: flex-end; }
+        .group { display: flex; flex-direction: column; gap: 5px; align-items: center; }
+        label { font-size: 11px; font-weight: bold; color: #555; text-transform: uppercase; }
+        input, select { height: 38px; padding: 0 10px; border: 1px solid #ccc; border-radius: 4px; text-align: center; }
+        .btn-gen { background: #28a745; color: white; border: none; padding: 0 30px; height: 40px; font-weight: bold; cursor: pointer; border-radius: 4px; }
 
         /* ================= GRID SISTEM ================= */
         .page-sheet {
             width: 215mm; height: 330mm; margin: 5mm auto;
             background-color: white; display: grid;
             grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
-            box-sizing: border-box; border: 0.1mm dashed #ccc; /* Garis pandu luar */
-            page-break-after: always;
+            box-sizing: border-box; page-break-after: always;
         }
-
         .label-card {
-            border: 0.2mm solid #000; /* Garis potong stiker */
-            padding: 8mm; box-sizing: border-box;
-            display: flex; flex-direction: column; overflow: hidden;
-            position: relative;
+            border: 0.1mm dashed #ccc; box-sizing: border-box;
+            display: flex; align-items: center; justify-content: center; padding: 5mm;
         }
 
-        /* HEADER */
-        .header { display: flex; align-items: center; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 10px; }
-        .logo { width: 50px; height: 50px; margin-right: 12px; }
-        .header-text { flex: 1; }
-        .header-text h2 { margin: 0; font-size: 11pt; text-transform: uppercase; }
-        .header-text p { margin: 0; font-size: 8pt; font-weight: bold; }
+        /* CONTAINER ISI LABEL */
+        .card-inner {
+            width: 95%; border: 0.5mm solid #000; padding: 5mm;
+            box-sizing: border-box; background: #fff;
+        }
 
-        .card-title { text-align: center; font-size: 10pt; font-weight: bold; background: #eee; margin-bottom: 10px; padding: 2px; border: 1px solid #000; }
+        /* HEADER (KOP SURAT) */
+        .header { display: flex; align-items: center; border-bottom: 2.5px double #000; padding-bottom: 8px; margin-bottom: 10px; }
+        .logo { width: 60px; height: 60px; margin-right: 12px; }
+        .header-text { flex: 1; text-align: center; }
+        .header-text .line1 { margin: 0; font-size: 10.5pt; font-weight: bold; }
+        .header-text .line2 { margin: 0; font-size: 12pt; font-weight: bold; text-transform: uppercase; }
+        .header-text .line3 { margin: 2px 0 0 0; font-size: 7.5pt; font-weight: normal; }
+
+        /* JUDUL & PERIODE */
+        .title-section { text-align: center; margin-bottom: 10px; }
+        .card-title { font-size: 13pt; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px; }
+        .card-periode { font-size: 10pt; font-weight: bold; text-transform: uppercase; border-top: 1px solid #000; display: inline-block; padding-top: 2px; min-width: 150px; }
 
         /* DATA PENERIMA */
-        .info-table { width: 100%; font-size: 9.5pt; border-collapse: collapse; margin-bottom: 8px; }
-        .info-table td { vertical-align: top; padding: 2px 0; }
-        .label-cell { width: 85px; font-weight: bold; }
-        .dots { width: 10px; }
+        .info-table { width: 100%; font-size: 10pt; border-collapse: collapse; margin-bottom: 10px; }
+        .info-table td { vertical-align: top; padding: 3px 0; }
+        .label-cell { width: 95px; font-weight: bold; }
+        .dots { width: 10px; text-align: center; }
 
         /* STATISTIK */
-        .stat-box { display: flex; border: 1px solid #000; margin-bottom: 10px; }
-        .stat-item { flex: 1; text-align: center; border-right: 1px solid #000; padding: 4px; }
+        .stat-box { display: flex; border: 1.5px solid #000; margin-bottom: 10px; }
+        .stat-item { flex: 1; text-align: center; border-right: 1.5px solid #000; padding: 5px; }
         .stat-item:last-child { border-right: none; }
-        .stat-val { display: block; font-size: 12pt; font-weight: bold; }
-        .stat-lbl { font-size: 7pt; text-transform: uppercase; }
+        .stat-val { display: block; font-size: 14pt; font-weight: bold; }
+        .stat-lbl { font-size: 7.5pt; text-transform: uppercase; }
 
         /* CHECKLIST */
-        .checklist-title { font-size: 8.5pt; font-weight: bold; margin-bottom: 5px; text-decoration: underline; }
-        .check-item { display: flex; justify-content: space-between; font-size: 9pt; margin-bottom: 3px; }
-        .check-box { width: 12px; height: 12px; border: 1px solid #000; margin-right: 8px; display: inline-block; vertical-align: middle; }
+        .checklist-title { font-size: 9pt; font-weight: bold; margin-bottom: 5px; text-decoration: underline; }
+        .check-item { display: flex; justify-content: space-between; font-size: 9.5pt; margin-bottom: 4px; border-bottom: 0.1mm solid #eee; }
+        .check-box { width: 13px; height: 13px; border: 1.2px solid #000; margin-right: 10px; display: inline-block; vertical-align: middle; }
 
-        .footer-date { margin-top: auto; font-size: 8pt; text-align: right; font-style: italic; border-top: 1px dashed #ccc; padding-top: 5px; }
+        .footer-date { margin-top: 10px; font-size: 8.5pt; text-align: right; font-style: italic; border-top: 1px dashed #ccc; padding-top: 5px; }
 
         @media print {
             body { background: none; }
             .control-panel { display: none !important; }
-            .page-sheet { margin: 0; border: none; }
+            .page-sheet { margin: 0; }
         }
     </style>
 </head>
 <body>
 
 <div class="control-panel">
-    <h3>3. GENERATOR LABEL PAKET (Grid 2x2)</h3>
+    <h2 style="font-family: Arial; color: #007bff; margin-bottom: 20px;">LABEL LOGISTIK EBTAQ</h2>
     <div class="row">
         <div class="group">
-            <label>1. Upload CSV</label>
+            <label>1. CSV Data</label>
             <input type="file" id="csv-input" accept=".csv" onchange="processData()">
         </div>
         <div class="group">
-            <label>2. Tanggal EBTAQ</label>
-            <input type="text" id="ebtaq-date" placeholder="Contoh: 25 Mei 2025">
+            <label>2. Periode</label>
+            <input type="text" id="cfg-periode" placeholder="Contoh: TAHAP II 2025">
         </div>
         <div class="group">
-            <label>3. Mulai Dari Posisi</label>
+            <label>3. Tgl EBTAQ</label>
+            <input type="text" id="ebtaq-date" placeholder="25 Mei 2025">
+        </div>
+        <div class="group">
+            <label>4. Posisi Awal</label>
             <select id="start-pos">
-                <option value="1">Posisi 1 (Kiri Atas)</option>
-                <option value="2">Posisi 2 (Kanan Atas)</option>
-                <option value="3">Posisi 3 (Kiri Bawah)</option>
-                <option value="4">Posisi 4 (Kanan Bawah)</option>
+                <option value="1">1 (Kiri Atas)</option>
+                <option value="2">2 (Kanan Atas)</option>
+                <option value="3">3 (Kiri Bawah)</option>
+                <option value="4">4 (Kanan Bawah)</option>
             </select>
         </div>
-        <button class="btn-gen" onclick="generateLabels()">Generate Label</button>
     </div>
+    <button class="btn-gen" onclick="generateLabels()">GENERATE & CETAK LABEL</button>
 </div>
 
 <div id="render-area"></div>
@@ -108,52 +119,47 @@
     let groupedData = [];
     let lMemory = JSON.parse(localStorage.getItem('ebtaq_v19_mem')) || {};
 
+    window.onload = () => {
+        if(localStorage.getItem('cfg-periode')) document.getElementById('cfg-periode').value = localStorage.getItem('cfg-periode');
+    };
+
     function processData() {
         const file = document.getElementById('csv-input').files[0];
         const reader = new FileReader();
         reader.onload = (e) => {
             const lines = e.target.result.split(/\r?\n/).filter(l => l.trim() !== "");
             const headers = lines[0].split(';').map(h => h.replace(/"/g, '').trim().toUpperCase());
-            
             const raw = lines.slice(1).map(line => {
                 const cols = line.split(';').map(c => c.replace(/"/g, '').trim());
                 let obj = {}; headers.forEach((v, i) => { if(v) obj[v] = cols[i]; });
                 return obj;
             });
-
-            // Grouping berdasarkan Lembaga
             const schools = [...new Set(raw.map(d => d['ASAL LEMBAGA']))];
             groupedData = schools.map(s => {
                 const members = raw.filter(d => d['ASAL LEMBAGA'] === s);
                 const lulus = members.filter(m => (m['L / TL'] || m['L/TL']) === "L").length;
-                return {
-                    nama: s,
-                    total: members.length,
-                    l: lulus,
-                    tl: members.length - lulus
-                };
+                return { nama: s, total: members.length, l: lulus, tl: members.length - lulus };
             });
-            alert("Data terbaca: " + groupedData.length + " Lembaga.");
+            alert("Data Lembaga Berhasil Dimuat!");
         };
         reader.readAsText(file);
     }
 
     function generateLabels() {
-        if(groupedData.length === 0) return alert("Upload CSV dahulu!");
+        if(groupedData.length === 0) return alert("Pilih file CSV dahulu!");
         
         const startPos = parseInt(document.getElementById('start-pos').value);
         const ebtaqDate = document.getElementById('ebtaq-date').value || "....................";
+        const periode = document.getElementById('cfg-periode').value || "....................";
+        localStorage.setItem('cfg-periode', periode);
+
         const renderArea = document.getElementById('render-area');
         renderArea.innerHTML = '';
 
-        // Buat salinan data dengan offset kosong
         let finalItems = [];
-        for(let i = 1; i < startPos; i++) {
-            finalItems.push(null); // Placeholder kosong
-        }
+        for(let i = 1; i < startPos; i++) { finalItems.push(null); }
         finalItems = [...finalItems, ...groupedData];
 
-        // Pecah menjadi per halaman (4 kartu per halaman)
         for (let i = 0; i < finalItems.length; i += 4) {
             const pageData = finalItems.slice(i, i + 4);
             const pageDiv = document.createElement('div');
@@ -162,52 +168,49 @@
             pageData.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'label-card';
-                
                 if(item) {
                     const mem = lMemory[item.nama] || { alias: item.nama, head: "....................", korcam: "...................." };
                     card.innerHTML = `
-                        <div class="header">
-                            <img src="QIRAATI.png" class="logo" alt="Logo">
-                            <div class="header-text">
-                                <h2>Qiroati Korcab Demak</h2>
-                                <p>Taman Pendidikan Al-Qur'an Metode Qiroati</p>
+                        <div class="card-inner">
+                            <div class="header">
+                                <img src="QIRAATI.png" class="logo">
+                                <div class="header-text">
+                                    <p class="line1">KOORDINATOR PENDIDIKAN AL-QUR’AN</p>
+                                    <p class="line2">METODE QIROATI CABANG DEMAK</p>
+                                    <p class="line3">Sekretariat : Jl. Sunan Kalijaga No. 35 Betengan Bintoro Demak Hp. 0896-0898-6635</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-title">LABEL PENGIRIMAN DOKUMEN EBTAQ</div>
-                        
-                        <table class="info-table">
-                            <tr><td class="label-cell">LEMBAGA</td><td class="dots">:</td><td><strong>${mem.alias}</strong></td></tr>
-                            <tr><td class="label-cell">KEPALA</td><td class="dots">:</td><td>${mem.head}</td></tr>
-                            <tr><td class="label-cell">KORCAM</td><td class="dots">:</td><td>${mem.korcam}</td></tr>
-                            <tr><td class="label-cell">HP PENERIMA</td><td class="dots">:</td><td>.........................................</td></tr>
-                        </table>
-
-                        <div class="stat-box">
-                            <div class="stat-item"><span class="stat-val">${item.total}</span><span class="stat-lbl">Peserta</span></div>
-                            <div class="stat-item"><span class="stat-val">${item.l}</span><span class="stat-lbl">Lulus</span></div>
-                            <div class="stat-item"><span class="stat-val">${item.tl}</span><span class="stat-lbl">Tdk Lulus</span></div>
-                        </div>
-
-                        <div class="checklist-title">CHECKLIST ISI PAKET:</div>
-                        <div class="check-item"><span><span class="check-box"></span> Cover Ijazah</span> <span>${item.l} exp</span></div>
-                        <div class="check-item"><span><span class="check-box"></span> Ijazah (Hlm. Nilai)</span> <span>${item.l} exp</span></div>
-                        <div class="check-item"><span><span class="check-box"></span> Ijazah (Hlm. Identitas)</span> <span>${item.l} exp</span></div>
-                        <div class="check-item"><span><span class="check-box"></span> Foto Santri (L+TL)</span> <span>${item.total} lbr</span></div>
-                        <div class="check-item"><span><span class="check-box"></span> SKL Kolektif</span> <span>1 exp</span></div>
-
-                        <div class="footer-date">Tanggal EBTAQ: ${ebtaqDate}</div>
-                    `;
+                            <div class="title-section">
+                                <div class="card-title">DOKUMEN EBTAQ</div>
+                                <div class="card-periode">PERIODE: ${periode}</div>
+                            </div>
+                            <table class="info-table">
+                                <tr><td class="label-cell">LEMBAGA</td><td class="dots">:</td><td><strong>${mem.alias}</strong></td></tr>
+                                <tr><td class="label-cell">KEPALA</td><td class="dots">:</td><td>${mem.head}</td></tr>
+                                <tr><td class="label-cell">KORCAM</td><td class="dots">:</td><td>${mem.korcam}</td></tr>
+                                <tr><td class="label-cell">HP/WA</td><td class="dots">:</td><td>.........................................</td></tr>
+                            </table>
+                            <div class="stat-box">
+                                <div class="stat-item"><span class="stat-val">${item.total}</span><span class="stat-lbl">Peserta</span></div>
+                                <div class="stat-item"><span class="stat-val">${item.l}</span><span class="stat-lbl">Lulus</span></div>
+                                <div class="stat-item"><span class="stat-val">${item.tl}</span><span class="stat-lbl">Tdk Lulus</span></div>
+                            </div>
+                            <div class="checklist-title">CHECKLIST ISI PAKET:</div>
+                            <div class="check-item"><span><span class="check-box"></span> Cover Ijazah</span> <span>${item.l} exp</span></div>
+                            <div class="check-item"><span><span class="check-box"></span> Ijazah (Hlm. Nilai)</span> <span>${item.l} exp</span></div>
+                            <div class="check-item"><span><span class="check-box"></span> Ijazah (Hlm. Identitas)</span> <span>${item.l} exp</span></div>
+                            <div class="check-item"><span><span class="check-box"></span> Foto Santri (L+TL)</span> <span>${item.total} lbr</span></div>
+                            <div class="check-item"><span><span class="check-box"></span> Surat keterangan lulus (SKL)</span> <span>1 exp</span></div>
+                            <div class="footer-date">Tanggal EBTAQ: ${ebtaqDate}</div>
+                        </div>`;
                 }
                 pageDiv.appendChild(card);
             });
-
-            // Isi sisa grid jika halaman terakhir tidak penuh 4
             while(pageDiv.children.length < 4) {
                 const emptyCard = document.createElement('div');
                 emptyCard.className = 'label-card';
                 pageDiv.appendChild(emptyCard);
             }
-
             renderArea.appendChild(pageDiv);
         }
         window.print();
