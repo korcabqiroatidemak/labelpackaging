@@ -2,91 +2,108 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Label Packaging EBTAQ | Final</title>
+    <title>Label Packaging EBTAQ | Final Fix</title>
     <style>
-        /* Ukuran Kertas F4 (215mm x 330mm) */
         @page { size: 215mm 330mm; margin: 0; }
         body { 
-            margin: 0; padding: 0; background-color: #525659; 
+            margin: 0; padding: 0; background-color: #f0f2f5; 
             font-family: "Arial", sans-serif;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
 
-        /* ================= PANEL KONTROL ================= */
+        /* ================= PANEL KONTROL ESTETIK ================= */
         .control-panel {
             background: #fff; width: 210mm; margin: 20px auto;
-            padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            text-align: center;
+            padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            text-align: center; border: 1px solid #ddd;
         }
-        .control-panel h2 { color: #007bff; font-family: Arial; margin-bottom: 20px; text-transform: uppercase; }
-        .row { display: flex; gap: 15px; margin-bottom: 15px; justify-content: center; align-items: flex-end; }
-        .group { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+        .control-panel h2 { color: #007bff; margin-bottom: 25px; letter-spacing: 1px; }
+        .row { display: flex; gap: 20px; margin-bottom: 20px; justify-content: center; align-items: flex-end; }
+        .group { display: flex; flex-direction: column; gap: 8px; text-align: left; }
         label { font-size: 11px; font-weight: bold; color: #555; text-transform: uppercase; }
-        input, select { height: 40px; padding: 0 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .btn-gen { background: #28a745; color: white; border: none; padding: 0 40px; height: 40px; font-weight: bold; cursor: pointer; border-radius: 4px; transition: 0.3s; }
-        .btn-gen:hover { background: #218838; }
+        
+        input, select { 
+            height: 42px; padding: 0 12px; border: 1.5px solid #ccc; border-radius: 6px; 
+            box-sizing: border-box; font-size: 14px; background: #fafafa;
+        }
+
+        /* FIX: Tombol Pilih File agar melayang/center */
+        input[type="file"] {
+            padding: 0; display: flex; align-items: center; cursor: pointer; background: #fff;
+        }
+        input[type="file"]::-webkit-file-upload-button {
+            height: 42px; margin: -1.5px 10px -1.5px -1.5px; padding: 0 15px;
+            border: none; border-right: 1.5px solid #ccc; background: #eee;
+            color: #333; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        input[type="file"]::-webkit-file-upload-button:hover { background: #ddd; }
+
+        .btn-gen { 
+            background: #28a745; color: white; border: none; padding: 0 35px; 
+            height: 42px; font-weight: bold; cursor: pointer; border-radius: 6px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s;
+        }
+        .btn-gen:hover { background: #218838; transform: translateY(-1px); }
 
         /* ================= GRID SISTEM ================= */
         .page-sheet {
-            width: 215mm; height: 330mm; margin: 5mm auto;
+            width: 215mm; height: 330mm; margin: 0 auto;
             background-color: white; display: grid;
             grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
             box-sizing: border-box; page-break-after: always;
         }
         .label-card {
-            border: 0.1mm dashed #ccc; box-sizing: border-box;
+            border: 0.1mm dashed #bbb; box-sizing: border-box;
             display: flex; align-items: center; justify-content: center; padding: 5mm;
         }
 
-        /* CONTAINER ISI LABEL */
         .card-inner {
-            width: 96%; border: 0.5mm solid #000; padding: 4mm;
-            box-sizing: border-box; background: #fff;
+            width: 98%; border: 0.6mm solid #000; padding: 4mm;
+            box-sizing: border-box; background: #fff; position: relative;
         }
 
-        /* HEADER (KOP SURAT) */
-        .header-top { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        .logo { width: 55px; height: 55px; object-fit: contain; }
+        /* HEADER (KOP SURAT) - ANTI WARP */
+        .header-top { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px; }
+        .logo { width: 58px; height: 58px; }
         .header-title-text { text-align: center; }
-        .header-title-text .line1 { margin: 0; font-size: 10pt; font-weight: bold; }
-        .header-title-text .line2 { margin: 0; font-size: 12pt; font-weight: bold; text-transform: uppercase; }
+        .header-title-text .line1 { margin: 0; font-size: 10.5pt; font-weight: bold; }
+        .header-title-text .line2 { margin: 0; font-size: 12.5pt; font-weight: bold; text-transform: uppercase; white-space: nowrap; }
         
+        /* ALAMAT: Dibuat lebih kecil & rapat agar tidak wrapping */
         .header-address { 
-            margin-top: 5px; padding-top: 3px; border-top: 1px solid #000;
-            font-size: 7.2pt; text-align: center; line-height: 1.3;
-            border-bottom: 2.5px double #000; padding-bottom: 5px; margin-bottom: 8px;
+            margin-top: 5px; padding-top: 4px; border-top: 1.2pt solid #000;
+            font-size: 6.8pt; text-align: center; line-height: 1.2;
+            border-bottom: 2.8pt double #000; padding-bottom: 6px; margin-bottom: 10px;
+            white-space: nowrap; /* Memaksa satu baris */
+            letter-spacing: -0.1px; /* Merapatkan sedikit jika perlu */
         }
 
-        /* JUDUL & PERIODE */
         .title-section { text-align: center; margin-bottom: 8px; }
-        .card-title { font-size: 14pt; font-weight: 900; letter-spacing: 1px; margin-bottom: 0px; }
-        .card-periode { font-size: 9.5pt; font-weight: bold; text-transform: uppercase; }
+        .card-title { font-size: 15pt; font-weight: 900; margin-bottom: 0px; }
+        .card-periode { font-size: 10pt; font-weight: bold; }
 
-        /* DATA PENERIMA */
-        .info-table { width: 100%; font-size: 10pt; border-collapse: collapse; margin-bottom: 8px; }
+        .info-table { width: 100%; font-size: 10.5pt; border-collapse: collapse; margin-bottom: 8px; }
         .info-table td { vertical-align: top; padding: 2px 0; }
         .label-cell { width: 95px; font-weight: bold; }
-        .dots { width: 10px; text-align: center; }
 
-        /* STATISTIK */
-        .stat-box { display: flex; border: 1.5px solid #000; margin-bottom: 10px; }
-        .stat-item { flex: 1; text-align: center; border-right: 1.5px solid #000; padding: 4px; }
+        .stat-box { display: flex; border: 1.8px solid #000; margin-bottom: 10px; }
+        .stat-item { flex: 1; text-align: center; border-right: 1.8px solid #000; padding: 4px; }
         .stat-item:last-child { border-right: none; }
-        .stat-val { display: block; font-size: 13pt; font-weight: bold; }
-        .stat-lbl { font-size: 7pt; text-transform: uppercase; }
+        .stat-val { display: block; font-size: 14pt; font-weight: bold; }
+        .stat-lbl { font-size: 7.5pt; font-weight: bold; }
 
-        /* CHECKLIST */
-        .checklist-title { font-size: 8.5pt; font-weight: bold; margin-bottom: 4px; text-decoration: underline; }
-        .check-item { display: flex; justify-content: space-between; font-size: 9.2pt; margin-bottom: 3px; border-bottom: 0.1mm solid #f0f0f0; }
-        .check-box { width: 12px; height: 12px; border: 1.2px solid #000; margin-right: 8px; display: inline-block; vertical-align: middle; }
+        .checklist-title { font-size: 9pt; font-weight: bold; margin-bottom: 5px; text-decoration: underline; }
+        .check-item { display: flex; justify-content: space-between; font-size: 9.5pt; margin-bottom: 4px; border-bottom: 0.1mm solid #f0f0f0; }
+        .check-box { width: 13px; height: 13px; border: 1.5px solid #000; margin-right: 10px; display: inline-block; vertical-align: middle; }
 
-        .footer-date { margin-top: 8px; font-size: 8pt; text-align: right; font-style: italic; border-top: 1px dashed #ccc; padding-top: 3px; }
+        .footer-date { margin-top: 10px; font-size: 8.5pt; text-align: right; font-style: italic; border-top: 1px dashed #ccc; padding-top: 5px; }
 
         @media print {
             body { background: none; }
             .control-panel { display: none !important; }
             .page-sheet { margin: 0; }
+            .label-card { border: 0.1mm dashed #ccc; }
         }
     </style>
 </head>
@@ -94,9 +111,8 @@
 
 <div class="control-panel">
     <h2>LABEL PACKAGING</h2>
-    
     <div class="row">
-        <div class="group" style="flex: 1.5;">
+        <div class="group" style="flex: 1.6;">
             <label>1. Pilih Sumber Data CSV</label>
             <input type="file" id="csv-input" accept=".csv" onchange="processData()" style="width: 100%;">
         </div>
@@ -105,7 +121,6 @@
             <input type="text" id="cfg-periode" placeholder="Contoh: TAHAP II 2025" style="width: 100%;">
         </div>
     </div>
-
     <div class="row">
         <div class="group">
             <label>3. Tanggal EBTAQ</label>
@@ -134,7 +149,6 @@
     let lMemory = JSON.parse(localStorage.getItem('ebtaq_v19_mem')) || {};
 
     window.onload = () => {
-        // Restore data periode dan tanggal jika ada
         if(localStorage.getItem('cfg-periode')) document.getElementById('cfg-periode').value = localStorage.getItem('cfg-periode');
         document.getElementById('ebtaq-date-picker').value = new Date().toISOString().split('T')[0];
     };
@@ -170,17 +184,12 @@
 
     function generateLabels() {
         if(groupedData.length === 0) return alert("Pilih file CSV dahulu!");
-        
         const startPos = parseInt(document.getElementById('start-pos').value);
-        const ebtaqDateRaw = document.getElementById('ebtaq-date-picker').value;
-        const ebtaqDate = formatDateIndo(ebtaqDateRaw);
+        const ebtaqDate = formatDateIndo(document.getElementById('ebtaq-date-picker').value);
         const periode = document.getElementById('cfg-periode').value || "....................";
-        
         localStorage.setItem('cfg-periode', periode);
-
         const renderArea = document.getElementById('render-area');
         renderArea.innerHTML = '';
-
         let finalItems = [];
         for(let i = 1; i < startPos; i++) { finalItems.push(null); }
         finalItems = [...finalItems, ...groupedData];
@@ -189,7 +198,6 @@
             const pageData = finalItems.slice(i, i + 4);
             const pageDiv = document.createElement('div');
             pageDiv.className = 'page-sheet';
-
             pageData.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'label-card';
@@ -207,32 +215,27 @@
                             <div class="header-address">
                                 Sekretariat : Jl. Sunan Kalijaga No. 35 Betengan Bintoro Demak Hp. 0896-0898-6635
                             </div>
-
                             <div class="title-section">
                                 <div class="card-title">DOKUMEN EBTAQ</div>
                                 <div class="card-periode">PERIODE: ${periode}</div>
                             </div>
-
                             <table class="info-table">
-                                <tr><td class="label-cell">LEMBAGA</td><td class="dots">:</td><td><strong>${mem.alias}</strong></td></tr>
-                                <tr><td class="label-cell">KEPALA</td><td class="dots">:</td><td>${mem.head}</td></tr>
-                                <tr><td class="label-cell">KORCAM</td><td class="dots">:</td><td>${mem.korcam}</td></tr>
-                                <tr><td class="label-cell">HP/WA</td><td class="dots">:</td><td>.........................................</td></tr>
+                                <tr><td class="label-cell">LEMBAGA</td><td style="width:10px">:</td><td><strong>${mem.alias}</strong></td></tr>
+                                <tr><td class="label-cell">KEPALA</td><td>:</td><td>${mem.head}</td></tr>
+                                <tr><td class="label-cell">KORCAM</td><td>:</td><td>${mem.korcam}</td></tr>
+                                <tr><td class="label-cell">HP/WA</td><td>:</td><td>.........................................</td></tr>
                             </table>
-
                             <div class="stat-box">
                                 <div class="stat-item"><span class="stat-val">${item.total}</span><span class="stat-lbl">Peserta</span></div>
                                 <div class="stat-item"><span class="stat-val">${item.l}</span><span class="stat-lbl">Lulus</span></div>
                                 <div class="stat-item"><span class="stat-val">${item.tl}</span><span class="stat-lbl">Tdk Lulus</span></div>
                             </div>
-
                             <div class="checklist-title">CHECKLIST ISI PAKET:</div>
                             <div class="check-item"><span><span class="check-box"></span> Cover Ijazah</span> <span>${item.l} exp</span></div>
                             <div class="check-item"><span><span class="check-box"></span> Ijazah (Hlm. Nilai)</span> <span>${item.l} exp</span></div>
                             <div class="check-item"><span><span class="check-box"></span> Ijazah (Hlm. Identitas)</span> <span>${item.l} exp</span></div>
                             <div class="check-item"><span><span class="check-box"></span> Foto Santri (L+TL)</span> <span>${item.total} lbr</span></div>
                             <div class="check-item"><span><span class="check-box"></span> Surat keterangan lulus (SKL)</span> <span>1 exp</span></div>
-
                             <div class="footer-date">Tanggal EBTAQ: ${ebtaqDate}</div>
                         </div>`;
                 }
