@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Label Paket EBTAQ | Grid 2x2</title>
+    <style>
+        /* Ukuran Kertas F4 (215mm x 330mm) */
+        @page { size: 215mm 330mm; margin: 0; }
+        body { 
+            margin: 0; padding: 0; background-color: #525659; 
+            font-family: Arial, sans-serif;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* ================= PANEL KONTROL ================= */
+        .control-panel {
+            background: #fff; width: 210mm; margin: 20px auto;
+            padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .row { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
+        .group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 11px; font-weight: bold; color: #555; }
+        input, select { height: 38px; padding: 0 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-gen { background: #28a745; color: white; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+
+        /* ================= GRID SISTEM ================= */
+        .page-sheet {
+            width: 215mm; height: 330mm; margin: 5mm auto;
+            background-color: white; display: grid;
+            grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+            box-sizing: border-box; border: 0.1mm dashed #ccc; /* Garis pandu luar */
+            page-break-after: always;
+        }
+
+        .label-card {
+            border: 0.2mm solid #000; /* Garis potong stiker */
+            padding: 8mm; box-sizing: border-box;
+            display: flex; flex-direction: column; overflow: hidden;
+            position: relative;
+        }
+
+        /* HEADER */
+        .header { display: flex; align-items: center; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 10px; }
+        .logo { width: 50px; height: 50px; margin-right: 12px; }
+        .header-text { flex: 1; }
+        .header-text h2 { margin: 0; font-size: 11pt; text-transform: uppercase; }
+        .header-text p { margin: 0; font-size: 8pt; font-weight: bold; }
+
+        .card-title { text-align: center; font-size: 10pt; font-weight: bold; background: #eee; margin-bottom: 10px; padding: 2px; border: 1px solid #000; }
+
+        /* DATA PENERIMA */
+        .info-table { width: 100%; font-size: 9.5pt; border-collapse: collapse; margin-bottom: 8px; }
+        .info-table td { vertical-align: top; padding: 2px 0; }
+        .label-cell { width: 85px; font-weight: bold; }
+        .dots { width: 10px; }
+
+        /* STATISTIK */
+        .stat-box { display: flex; border: 1px solid #000; margin-bottom: 10px; }
+        .stat-item { flex: 1; text-align: center; border-right: 1px solid #000; padding: 4px; }
+        .stat-item:last-child { border-right: none; }
+        .stat-val { display: block; font-size: 12pt; font-weight: bold; }
+        .stat-lbl { font-size: 7pt; text-transform: uppercase; }
+
+        /* CHECKLIST */
+        .checklist-title { font-size: 8.5pt; font-weight: bold; margin-bottom: 5px; text-decoration: underline; }
+        .check-item { display: flex; justify-content: space-between; font-size: 9pt; margin-bottom: 3px; }
+        .check-box { width: 12px; height: 12px; border: 1px solid #000; margin-right: 8px; display: inline-block; vertical-align: middle; }
+
+        .footer-date { margin-top: auto; font-size: 8pt; text-align: right; font-style: italic; border-top: 1px dashed #ccc; padding-top: 5px; }
+
+        @media print {
+            body { background: none; }
+            .control-panel { display: none !important; }
+            .page-sheet { margin: 0; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="control-panel">
+    <h3>3. GENERATOR LABEL PAKET (Grid 2x2)</h3>
+    <div class="row">
+        <div class="group">
+            <label>1. Upload CSV</label>
+            <input type="file" id="csv-input" accept=".csv" onchange="processData()">
+        </div>
+        <div class="group">
+            <label>2. Tanggal EBTAQ</label>
+            <input type="text" id="ebtaq-date" placeholder="Contoh: 25 Mei 2025">
+        </div>
+        <div class="group">
+            <label>3. Mulai Dari Posisi</label>
+            <select id="start-pos">
+                <option value="1">Posisi 1 (Kiri Atas)</option>
+                <option value="2">Posisi 2 (Kanan Atas)</option>
+                <option value="3">Posisi 3 (Kiri Bawah)</option>
+                <option value="4">Posisi 4 (Kanan Bawah)</option>
+            </select>
+        </div>
+        <button class="btn-gen" onclick="generateLabels()">Generate Label</button>
+    </div>
+</div>
+
+<div id="render-area"></div>
+
+<script>
+    let groupedData = [];
+    let lMemory = JSON.parse(localStorage.getItem('ebtaq_v19_mem')) || {};
+
+    function processData() {
+        const file = document.getElementById('csv-input').files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const lines = e.target.result.split(/\r?\n/).filter(l => l.trim() !== "");
+            const headers = lines[0].split(';').map(h => h.replace(/"/g, '').trim().toUpperCase());
+            
+            const raw = lines.slice(1).map(line => {
+                const cols = line.split(';').map(c => c.replace(/"/g, '').trim());
+                let obj = {}; headers.forEach((v, i) => { if(v) obj[v] = cols[i]; });
+                return obj;
+            });
+
+            // Grouping berdasarkan Lembaga
+            const schools = [...new Set(raw.map(d => d['ASAL LEMBAGA']))];
+            groupedData = schools.map(s => {
+                const members = raw.filter(d => d['ASAL LEMBAGA'] === s);
+                const lulus = members.filter(m => (m['L / TL'] || m['L/TL']) === "L").length;
+                return {
+                    nama: s,
+                    total: members.length,
+                    l: lulus,
+                    tl: members.length - lulus
+                };
+            });
+            alert("Data terbaca: " + groupedData.length + " Lembaga.");
+        };
+        reader.readAsText(file);
+    }
+
+    function generateLabels() {
+        if(groupedData.length === 0) return alert("Upload CSV dahulu!");
+        
+        const startPos = parseInt(document.getElementById('start-pos').value);
+        const ebtaqDate = document.getElementById('ebtaq-date').value || "....................";
+        const renderArea = document.getElementById('render-area');
+        renderArea.innerHTML = '';
+
+        // Buat salinan data dengan offset kosong
+        let finalItems = [];
+        for(let i = 1; i < startPos; i++) {
+            finalItems.push(null); // Placeholder kosong
+        }
+        finalItems = [...finalItems, ...groupedData];
+
+        // Pecah menjadi per halaman (4 kartu per halaman)
+        for (let i = 0; i < finalItems.length; i += 4) {
+            const pageData = finalItems.slice(i, i + 4);
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'page-sheet';
+
+            pageData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'label-card';
+                
+                if(item) {
+                    const mem = lMemory[item.nama] || { alias: item.nama, head: "....................", korcam: "...................." };
+                    card.innerHTML = `
+                        <div class="header">
+                            <img src="QIRAATI.png" class="logo" alt="Logo">
+                            <div class="header-text">
+                                <h2>Qiroati Korcab Demak</h2>
+                                <p>Taman Pendidikan Al-Qur'an Metode Qiroati</p>
+                            </div>
+                        </div>
+                        <div class="card-title">LABEL PENGIRIMAN DOKUMEN EBTAQ</div>
+                        
+                        <table class="info-table">
+                            <tr><td class="label-cell">LEMBAGA</td><td class="dots">:</td><td><strong>${mem.alias}</strong></td></tr>
+                            <tr><td class="label-cell">KEPALA</td><td class="dots">:</td><td>${mem.head}</td></tr>
+                            <tr><td class="label-cell">KORCAM</td><td class="dots">:</td><td>${mem.korcam}</td></tr>
+                            <tr><td class="label-cell">HP PENERIMA</td><td class="dots">:</td><td>.........................................</td></tr>
+                        </table>
+
+                        <div class="stat-box">
+                            <div class="stat-item"><span class="stat-val">${item.total}</span><span class="stat-lbl">Peserta</span></div>
+                            <div class="stat-item"><span class="stat-val">${item.l}</span><span class="stat-lbl">Lulus</span></div>
+                            <div class="stat-item"><span class="stat-val">${item.tl}</span><span class="stat-lbl">Tdk Lulus</span></div>
+                        </div>
+
+                        <div class="checklist-title">CHECKLIST ISI PAKET:</div>
+                        <div class="check-item"><span><span class="check-box"></span> Cover Ijazah</span> <span>${item.l} exp</span></div>
+                        <div class="check-item"><span><span class="check-box"></span> Ijazah (Hlm. Nilai)</span> <span>${item.l} exp</span></div>
+                        <div class="check-item"><span><span class="check-box"></span> Ijazah (Hlm. Identitas)</span> <span>${item.l} exp</span></div>
+                        <div class="check-item"><span><span class="check-box"></span> Foto Santri (L+TL)</span> <span>${item.total} lbr</span></div>
+                        <div class="check-item"><span><span class="check-box"></span> SKL Kolektif</span> <span>1 exp</span></div>
+
+                        <div class="footer-date">Tanggal EBTAQ: ${ebtaqDate}</div>
+                    `;
+                }
+                pageDiv.appendChild(card);
+            });
+
+            // Isi sisa grid jika halaman terakhir tidak penuh 4
+            while(pageDiv.children.length < 4) {
+                const emptyCard = document.createElement('div');
+                emptyCard.className = 'label-card';
+                pageDiv.appendChild(emptyCard);
+            }
+
+            renderArea.appendChild(pageDiv);
+        }
+        window.print();
+    }
+</script>
+</body>
+</html>
